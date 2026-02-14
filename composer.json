@@ -1,0 +1,28 @@
+{
+  "name": "iceithq/oneid-php-client",
+  "description": "OneID PHP Client",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ICE IT Solutions",
+      "email": "info@iceitsolutions.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "OneID\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "OneID\\Tests\\": "tests/"
+    }
+  }
+}
