@@ -56,6 +56,11 @@ class Client
         return $this->get('/genders');
     }
 
+    function get_cameras()
+    {
+        return $this->get('/cameras');
+    }
+
     function get_civil_statuses()
     {
         return $this->get('/civil_statuses');
@@ -144,12 +149,11 @@ class Client
 
         // Debug URL
         if ($this->app_debug) {
-            echo '<pre>';
             echo 'curl -X GET "' . $params . '" ';
             foreach ($final_headers as $h) {
                 echo '  -H "' . $h . '" ';
             }
-            echo '</pre><br>';
+            echo endl();
         }
 
         // cURL options
@@ -279,14 +283,13 @@ class Client
         // Debugging (consistent with your previous style)
         // if (config_item('app_debug')) {
         if ($this->app_debug) {
-            echo '<pre>';
             echo 'curl -X POST "' . $this->base_url . $url . '"';
             // echo ' -H "Content-Type: application/json" ';
             foreach ($final_headers as $h) {
                 echo '  -H "' . $h . '" ';
             }
             echo " -d '" . $json_data . "'";
-            echo '</pre><br>';
+            echo endl();
         }
 
         $output = curl_exec($ch);
@@ -512,5 +515,12 @@ if (!function_exists('print_pre')) {
         echo '<pre>';
         print_r($data);
         echo '</pre>';
+    }
+}
+
+if (!function_exists('endl')) {
+    function endl()
+    {
+        return "\n";
     }
 }
