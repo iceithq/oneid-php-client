@@ -11,8 +11,6 @@
 
 namespace OneID;
 
-// defined('BASEPATH') or exit('No direct script access allowed');
-
 class Client
 {
     var $base_url;
@@ -36,6 +34,7 @@ class Client
         return $this;
     }
 
+    // Resources
     function resident()
     {
         return new ResidentResource($this);
@@ -50,6 +49,12 @@ class Client
     {
         return new RiderResource($this);
     }
+
+    function app($app_key)
+    {
+        return new AppResource($this, $app_key);
+    }
+    // End resources
 
     function get_genders()
     {
@@ -108,18 +113,6 @@ class Client
     {
         $data = array('username' => $username, 'password' => $password);
         return $this->post_json('/auth/login', $data);
-    }
-
-    function get_jobs()
-    {
-        $data = [];
-        return $this->get('/jobs', $data);
-    }
-
-    function accept_job($job_id)
-    {
-        $data = array();
-        return $this->post_json('/jobs/' . $job_id . '/accept', $data);
     }
 
     // Private functions
@@ -310,204 +303,24 @@ class Client
     }
 }
 
-class MunicipalityResource
+class AppResource
 {
-    var $client;
+    private Client  $client;
+    private string $app_key;
 
-    function __construct($client)
+    function __construct($client, $app_key)
     {
         $this->client = $client;
+        $this->app_key = $app_key;
     }
 
-    function hello()
+    function endpoint($endpoint)
     {
-        return $this->client->get('/municipality/hello');
-    }
-
-    function get_news($news_id = null, $municipality_id = null)
-    {
-        $data = [];
-        return $this->client->get('/municipality/news/' . $news_id, $data);
+        $encoded_app_key = urlencode($this->app_key);
+        $full_encoded_app_key = str_replace('.', '%2E', $encoded_app_key);
+        return $this->client->get('/apps/' . $full_encoded_app_key . '/' . urlencode($endpoint));
     }
 }
-
-class RiderResource
-{
-    private Client $client;
-
-    function __construct($client)
-    {
-        $this->client = $client;
-    }
-
-    function hello()
-    {
-        return $this->client->get('/rider/hello');
-    }
-
-    function get_jobs()
-    {
-        $data = [];
-        return $this->client->get('/rider/jobs', $data);
-    }
-}
-
-class ResidentResource
-{
-    private Client $client;
-
-    function __construct($client)
-    {
-        $this->client = $client;
-    }
-
-    function hello()
-    {
-        return $this->client->get('/resident/hello');
-    }
-
-    function update_avatar($avatar_url)
-    {
-        $data = array('avatar_url' => $avatar_url);
-        return $this->client->post_json('/resident/update_avatar', $data);
-    }
-
-    function login($username, $password)
-    {
-        $data = array('username' => $username, 'password' => $password);
-        return $this->client->post_json('/auth/resident/login', $data);
-    }
-
-    function verify($code)
-    {
-        return $this->client->post_json('/auth/resident/verify', ['code' => $code]);
-    }
-
-    function register($resident)
-    {
-        return $this->client->post_json('/auth/resident/register', $resident);
-    }
-
-    function get_news($news_id = null)
-    {
-        $data = [];
-        return $this->client->get('/resident/news/' . $news_id, $data);
-    }
-
-    function get_external_services()
-    {
-        $data = [];
-        return $this->client->get('/resident/external_services', $data);
-    }
-
-    function get_financial_aid()
-    {
-        $data = [];
-        return $this->client->get('/resident/programs/financial', $data);
-    }
-
-    function get_applications()
-    {
-        $data = [];
-        return $this->client->get('/resident/applications', $data);
-    }
-
-    function get_disaster_applications()
-    {
-        $data = [];
-        return $this->client->get('/resident/applications/disaster', $data);
-    }
-
-    function get_reliefs()
-    {
-        $data = [];
-        return $this->client->get('/resident/programs/relief', $data);
-    }
-
-    function get_disasters()
-    {
-        $data = [];
-        return $this->client->get('/resident/programs/disaster', $data);
-    }
-
-    function get_certificates()
-    {
-        $data = [];
-        return $this->client->get('/resident/certificates', $data);
-    }
-
-    function get_certificate_applications()
-    {
-        $data = [];
-        return $this->client->get('/resident/certificates/applications', $data);
-    }
-
-    function get_certificate($certificate_id)
-    {
-        $data = [];
-        return $this->client->get('/resident/certificates/' . $certificate_id, $data);
-    }
-
-    function apply_certificate($certificate_id, $application)
-    {
-        return $this->client->post_json('/resident/certificates/' . $certificate_id . '/apply', $application);
-    }
-
-    function download_certificate_application($certification_application_id)
-    {
-        return $this->client->get_binary('/resident/certificates/applications/' . $certification_application_id . '/download');
-    }
-
-    function claim_program($program_id)
-    {
-        $data = [];
-        return $this->client->get('/resident/programs/' . $program_id . '/claim', $data);
-    }
-
-    function get_program($program_id)
-    {
-        $data = [];
-        return $this->client->get('/resident/programs/' . $program_id, $data);
-    }
-
-    function get_announcements()
-    {
-        $data = [];
-        return $this->client->get('/resident/announcements', $data);
-    }
-
-    function get_notifications()
-    {
-        $data = [];
-        return $this->client->get('/resident/notifications', $data);
-    }
-
-    function claim($program_id, $claim)
-    {
-        return $this->client->post_json('/resident/programs/' . $program_id . '/claim', $claim);
-    }
-
-    function get_wallet()
-    {
-        return $this->client->get('/resident/wallet');
-    }
-
-    function withdraw($transaction)
-    {
-        return $this->client->post_json('/resident/wallet/withdraw', $transaction);
-    }
-
-    function get_transactions()
-    {
-        return $this->client->get('/resident/transactions');
-    }
-
-    function get_profile()
-    {
-        return $this->client->get('/resident/profile');
-    }
-}
-
 
 if (!function_exists('print_pre')) {
     function print_pre($data)
@@ -521,6 +334,9 @@ if (!function_exists('print_pre')) {
 if (!function_exists('endl')) {
     function endl()
     {
-        return "\n";
+        if (php_sapi_name() === 'cli') {
+            return "\n";
+        }
+        return "<br>";
     }
 }
