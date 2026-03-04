@@ -309,25 +309,6 @@ class Client
     }
 }
 
-class AppResource
-{
-    private Client  $client;
-    private string $app_key;
-
-    function __construct($client, $app_key)
-    {
-        $this->client = $client;
-        $this->app_key = $app_key;
-    }
-
-    function endpoint($endpoint)
-    {
-        $encoded_app_key = urlencode($this->app_key);
-        $full_encoded_app_key = str_replace('.', '%2E', $encoded_app_key);
-        return $this->client->get('/apps/' . $full_encoded_app_key . '/' . urlencode($endpoint));
-    }
-}
-
 if (!function_exists('print_pre')) {
     function print_pre($data)
     {
