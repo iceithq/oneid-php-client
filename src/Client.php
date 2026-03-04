@@ -97,6 +97,12 @@ class Client
         return $this->get('/programs/statuses', $data);
     }
 
+    function get_pending_jobs()
+    {
+        $data = [];
+        return $this->get('/jobs/pending', $data);
+    }
+
     function get_certificate_purposes()
     {
         $data = [];
