@@ -34,6 +34,12 @@ class RiderResource
         return $this->client->post_json('/rider/jobs/' . $job_id . '/accept', $data);
     }
 
+    function mark_job_delivered($job_id)
+    {
+        $data = array();
+        return $this->client->post_json('/rider/jobs/' . $job_id . '/delivered', $data);
+    }
+
     function get_profile()
     {
         return $this->client->get('/rider/profile');
