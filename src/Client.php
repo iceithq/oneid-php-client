@@ -91,6 +91,13 @@ class Client
         return $this->get('/municipalities/' . $municipality_id . '/barangays', $data);
     }
 
+    function get_transaction($transaction_id)
+    {
+        $data = [];
+        $transaction_id = $transaction_id;
+        return $this->get('/transactions/' . $transaction_id, $data);
+    }
+
     function get_program_statuses()
     {
         $data = [];
@@ -101,6 +108,18 @@ class Client
     {
         $data = [];
         return $this->get('/jobs/pending', $data);
+    }
+
+    function get_certificates($department_code = null)
+    {
+        $data = ['department' => $department_code];
+        return $this->get('/certificates', $data);
+    }
+
+    function get_certificate($certificate_id)
+    {
+        $data = [];
+        return $this->get('/certificates/' . $certificate_id, $data);
     }
 
     function get_certificate_purposes()
